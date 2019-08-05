@@ -1,5 +1,6 @@
 $('.slider-controls').css('display', 'block');
 $('.slider-indicators').css('display', 'block');
+$('.slider').css('opacity', '1');
 
 let length = $('.slider-item').toArray().length;
 let currentSlide = 0;
@@ -12,9 +13,13 @@ const disabledIndicator_FA = 'far fa-circle indicator';
 const playBtn_FA = 'fas fa-play';
 const pauseBtn_FA = 'fas fa-pause';
 
+
 $('.slider-item').eq(currentSlide).css('z-index', 1);
 
-let slideInterval = setInterval(showNextSlide, delay); //запускаем слайдер
+setTimeout(() => {
+  $('.loading').css('display', 'none');
+  let slideInterval = setInterval(showNextSlide, delay); //запускаем слайдер
+}, 1000);
 
 
 function showNextSlide() { //следующий слайд
