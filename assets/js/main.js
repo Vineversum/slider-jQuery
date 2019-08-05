@@ -116,7 +116,7 @@ $('#previous-btn').on('click', function() {
 
 $('.slider-indicators').on('click', 'i', function(){
   pauseSlideshow();
-  if ($(this).index() > currentSlide) goToSlide($(this).index(), 'toRight');
+  if ($(this).index() > currentSlide) goToSlide($(this).index(), 'toLeft');
   else goToSlide($(this).index(), 'toLeft');
 })
 
