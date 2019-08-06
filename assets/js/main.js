@@ -1,8 +1,12 @@
-$('.slider-controls').css('display', 'block');
-$('.slider-indicators').css('display', 'block');
-$('.slider').css('opacity', '1');
 
-let length = $('.slider-item').toArray().length;
+$slides = $('.slider-item');
+$playPause = $('#play-pause');
+$next = $('#next-btn');
+$prev = $('#previous-btn');
+$indicators = $('.indicator');
+$indicatorsContainer = $('.slider-indicators');
+$body = $('body');
+let length = $slides.toArray().length;
 let currentSlide = 0;
 let nextSlide;
 let playing = true;
@@ -12,13 +16,19 @@ const activeIndicator_FA = 'fas fa-circle indicator';
 const disabledIndicator_FA = 'far fa-circle indicator';
 const playBtn_FA = 'fas fa-play';
 const pauseBtn_FA = 'fas fa-pause';
+let slideInterval;
+
+$('.slider-controls').css('display', 'block');
+$indicatorsContainer.css('display', 'block');
+$('.slider').css('opacity', '1');
 
 
-$('.slider-item').eq(currentSlide).css('z-index', 1);
+
+$slides.eq(currentSlide).css('z-index', 1);
 
 setTimeout(() => {
   $('.loading').css('display', 'none');
-  let slideInterval = setInterval(showNextSlide, delay); //запускаем слайдер
+  slideInterval = setInterval(showNextSlide, delay); //запускаем слайдер
 }, 1000);
 
 
@@ -35,20 +45,20 @@ function goToSlide(n, direction) { //переход на n-ый слайд, ан
     isGoing = true;
     nextSlide = (n + length) % length; 
 
-    $('.indicator').eq(currentSlide).attr('class', disabledIndicator_FA);
-    $('.indicator').eq(nextSlide).attr('class', activeIndicator_FA);
+    $indicators.eq(currentSlide).attr('class', disabledIndicator_FA);
+    $indicators.eq(nextSlide).attr('class', activeIndicator_FA);
     
     if (direction === 'toRight') {
-        $('.slider-item').eq(nextSlide).css('transform', 'translateX(-100%)');
+      $slides.eq(nextSlide).css('transform', 'translateX(-100%)');
         
         
         setTimeout(function(){ 
-            $('.slider-item').eq(nextSlide).css({
+          $slides.eq(nextSlide).css({
               'z-index': '1',
               'transition': 'transform 0.5s',
               'transform': 'translateX(0)'
             });
-            $('.slider-item').eq(currentSlide).css({
+            $slides.eq(currentSlide).css({
               'transition': 'transform 0.5s',
               'transform': 'translateX(100%)'
             });
@@ -57,17 +67,17 @@ function goToSlide(n, direction) { //переход на n-ый слайд, ан
     }
     if (direction === 'toLeft') {
       
-        $('.slider-item').eq(nextSlide).css({
+      $slides.eq(nextSlide).css({
           transform: 'translateX(100%)'
         });
         
         setTimeout(function(){
-            $('.slider-item').eq(nextSlide).css({
+          $slides.eq(nextSlide).css({
               'z-index': '1',
               'transition': 'transform 0.5s',
               'transform':'translateX(0)'
             });
-            $('.slider-item').eq(currentSlide).css({
+            $slides.eq(currentSlide).css({
               'transition': 'transform 0.5s',
               'transform': 'translateX(-100%)'
             });
@@ -75,11 +85,11 @@ function goToSlide(n, direction) { //переход на n-ый слайд, ан
     }
     setTimeout(function(){
         
-        $('.slider-item').eq(currentSlide).css({
+      $slides.eq(currentSlide).css({
           'transition': 'none',
           'z-index': '0'
         });
-        $('.slider-item').eq(nextSlide).css('transition', 'none');
+        $slides.eq(nextSlide).css('transition', 'none');
         currentSlide = nextSlide;
         isGoing = false;
     }, 500);
@@ -87,7 +97,7 @@ function goToSlide(n, direction) { //переход на n-ый слайд, ан
 };
 
 
-$('#play-pause').on('click', function(){ //по нажатию на кнопку воспроизведения/паузы останавливаем или запускаем слайдер 
+$playPause.on('click', function(){ //по нажатию на кнопку воспроизведения/паузы останавливаем или запускаем слайдер 
     if (playing) {
         pauseSlideshow();
     }
@@ -98,35 +108,35 @@ $('#play-pause').on('click', function(){ //по нажатию на кнопку
 
 function pauseSlideshow(){ //функция паузы
     playing = false;
-    $('#play-pause').attr('class', playBtn_FA); //меняем внешний фид кнопки
+    $playPause.attr('class', playBtn_FA); //меняем внешний фид кнопки
     clearInterval(slideInterval);
 };
 
 function playSlideshow() { //функция воспроизведения
     playing = true;
-    $('#play-pause').attr('class', pauseBtn_FA); //меняем внешний фид кнопки
+    $playPause.attr('class', pauseBtn_FA); //меняем внешний фид кнопки
     slideInterval = setInterval(showNextSlide, delay);
 };
 
-$('#next-btn').on('click', function() {
+$next.on('click', function() {
     pauseSlideshow();
     showNextSlide();
 });
 
-$('#previous-btn').on('click', function() {
+$prev.on('click', function() {
     pauseSlideshow();
     showPreviousSlide();
 });
 
 
-$('.slider-indicators').on('click', 'i', function(){
+$indicatorsContainer.on('click', 'i', function(){
   pauseSlideshow();
   if ($(this).index() > currentSlide) goToSlide($(this).index(), 'toLeft');
   else goToSlide($(this).index(), 'toRight');
 })
 
 
-$('body').on('keydown', keyNavigation); //обрабатываем нажатие кнопки
+$body.on('keydown', keyNavigation); //обрабатываем нажатие кнопки
 
 function keyNavigation(event) {
     
